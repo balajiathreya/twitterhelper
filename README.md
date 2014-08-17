@@ -1,4 +1,4 @@
 twitterhelper
 =============
 
-A backend for twitterhelper.balajiathreya.com. Contains services accessing twitter api
+A backend for http://twitterhelper.balajiathreya.com. Contains services accessing Twitter api
