@@ -6,4 +6,6 @@ twitterapikey=''
 twitterapisecret=''
 twitterbearertoken=''
 
+flickrapikey=''
+
 
