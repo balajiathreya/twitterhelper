@@ -45,19 +45,21 @@ def gettrending():
         print e.headers
     return 'No trending tweets found for this location'
 
+
 @app.route("/getWOEID")
 def getWOEID():
-    lat =  request.args['lat']
-    lon =  request.args['lon']
-    headers = {}
-    url = 'https://api.flickr.com/services/rest/?method=flickr.places.findByLatLon&api_key='+FLICKR_APIKEY+'&lat='+str(lat)+'&lon='+str(lon)+'&accuracy=11&format=json&nojsoncallback=1'
-    req = urllib2.Request(url, None, headers)
-    response = urllib2.urlopen(req)
-    data = response.read()
-    jsonData = json.loads(data)
-    # woeid = jsonData['places']['place'][0]['woeid']
-    # return woeid;
-    return data;
+     lat = request.args['lat']
+     lon = request.args['lon']
+     bearerToken = getBearerToken()
+     authorization = 'Bearer ' + bearerToken
+     headers = {'Authorization':authorization}
+     url = 'https://api.twitter.com/1.1/trends/closest.json?lat='+str(lat)+'&lon='+str(lon)
+     req = urllib2.Request(url, None, headers)
+     response = urllib2.urlopen(req)
+     data = response.read()
+     jsonData = json.loads(data)
+     woeid = jsonData[0]['woeid']
+     return woeid;
 
 
 def getBearerToken():
