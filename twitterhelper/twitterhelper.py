@@ -16,7 +16,7 @@ FLICKR_APIKEY=credentials.flickrapikey
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-cors = CORS(app, resources={r"/gettrending": {"origins": "*"}},
+cors = CORS(app, resources={r"/*": {"origins": "*"}},
             headers="Content-Type")
 
 @app.route('/')
@@ -28,32 +28,36 @@ def hello():
 # https://dev.twitter.com/docs/auth/application-only-auth
 @app.route("/gettrending")
 def gettrending():
-    lat =  request.args['lat']
-    lon =  request.args['lon']
-    woeid = getWOEID(lat,lon)
+    woeid = request.args['woeid']
     bearerToken = getBearerToken()
     authorization = 'Bearer ' + bearerToken
     headers = {'Authorization':authorization}
     url = 'https://api.twitter.com/1.1/trends/place.json?id='+woeid
-    print url
     req = urllib2.Request(url, None, headers)
-    response = urllib2.urlopen(req)
-    data = response.read()   
-    return data;
+    try:
+        response = urllib2.urlopen(req)
+        if(response.getcode() == 200):
+            data = response.read()   
+            return data
+    except urllib2.HTTPError, e:
+        print e.code
+        print e.msg
+        print e.headers
+    return 'No trending tweets found for this location'
 
-
-def getWOEID(lat,lon):
+@app.route("/getWOEID")
+def getWOEID():
+    lat =  request.args['lat']
+    lon =  request.args['lon']
     headers = {}
-    print('getWOEID '+lat)
-    print('getWOEID '+lon)
-    url = 'https://api.flickr.com/services/rest/?method=flickr.places.findByLatLon&api_key='+FLICKR_APIKEY+'&lat='+str(lat)+'&lon='+str(lon)+'&format=json&nojsoncallback=1'
-    print url;
+    url = 'https://api.flickr.com/services/rest/?method=flickr.places.findByLatLon&api_key='+FLICKR_APIKEY+'&lat='+str(lat)+'&lon='+str(lon)+'&accuracy=11&format=json&nojsoncallback=1'
     req = urllib2.Request(url, None, headers)
     response = urllib2.urlopen(req)
     data = response.read()
     jsonData = json.loads(data)
-    woeid = jsonData['places']['place'][0]['woeid']
-    return woeid;
+    # woeid = jsonData['places']['place'][0]['woeid']
+    # return woeid;
+    return data;
 
 
 def getBearerToken():
