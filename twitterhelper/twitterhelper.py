@@ -15,9 +15,9 @@ TWITTER_BEARERTOKEN=credentials.twitterbearertoken
 FLICKR_APIKEY=credentials.flickrapikey
 
 app = Flask(__name__)
-app.config.from_object(__name__)
-cors = CORS(app, resources={r"/*": {"origins": "*"}},
-            headers="Content-Type")
+#app.config.from_object(__name__)
+CORS(app, resources=r'/*', headers="Content-Type")
+
 
 @app.route('/')
 def hello():
@@ -46,6 +46,7 @@ def gettrending():
     return 'No trending tweets found for this location'
 
 
+
 @app.route("/getWOEID")
 def getWOEID():
      lat = request.args['lat']
@@ -57,9 +58,9 @@ def getWOEID():
      req = urllib2.Request(url, None, headers)
      response = urllib2.urlopen(req)
      data = response.read()
-     jsonData = json.loads(data)
-     woeid = jsonData[0]['woeid']
-     return woeid;
+     return data
+     #jsonData = json.loads(data)
+     #return jsonData[0]
 
 
 def getBearerToken():
