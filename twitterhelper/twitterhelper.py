@@ -49,18 +49,18 @@ def gettrending():
 
 @app.route("/getWOEID")
 def getWOEID():
-     lat = request.args['lat']
-     lon = request.args['lon']
-     bearerToken = getBearerToken()
-     authorization = 'Bearer ' + bearerToken
-     headers = {'Authorization':authorization}
-     url = 'https://api.twitter.com/1.1/trends/closest.json?lat='+str(lat)+'&lon='+str(lon)
-     req = urllib2.Request(url, None, headers)
-     response = urllib2.urlopen(req)
-     data = response.read()
-     return data
-     #jsonData = json.loads(data)
-     #return jsonData[0]
+    lat = request.args['lat']
+    lon = request.args['lon']
+    bearerToken = getBearerToken()
+    authorization = 'Bearer ' + bearerToken
+    headers = {'Authorization':authorization}
+    url = 'https://api.twitter.com/1.1/trends/closest.json?lat='+str(lat)+'&long='+str(lon)
+    req = urllib2.Request(url, None, headers)
+    response = urllib2.urlopen(req)
+    data = response.read()
+    return data
+    #jsonData = json.loads(data)
+    #return jsonData[0]
 
 
 def getBearerToken():
